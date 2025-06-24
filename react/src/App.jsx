@@ -4,8 +4,11 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Sock from "./components/Sock";
 import sock_data from './assets/sock.json';
+import promo_data from './assets/promo.json';
+
 import Footer from "./components/Footer";
 import Search from "./components/Search";
+import Featured from "./components/Featured";
 
 
 
@@ -51,8 +54,18 @@ function App() {
         <div className="container-fluid">
           <div className="row">
             Both socks and space rockets 🚀 will take you to new heights, but only one will get cold feet!
-            <div className="card-container"><Sock data={sock_data}/></div>
-            <Footer environment={"DEVELOPMENT"}/>
+            <div className="card-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>{
+              promo_data.map((promo) => (
+                <Featured key={promo.id} data={promo} />
+              ))
+            }</div>
+            <br></br>
+            <div className="card-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>{
+              sock_data.map((sock) => (
+                <Sock key={sock.id} data={sock} />
+              ))
+            }</div>
+            <Footer environment={"DEVELOPMENT"} />
           </div>
         </div>
       </main>
