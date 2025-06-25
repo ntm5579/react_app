@@ -21,6 +21,10 @@ const Sock = (props) => {
             <div className="card-footer" >
                 <small className="text-muted">Added: {props.data.addedTimestamp}</small>
             </div>
+            <div className="card-footer" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <small className="text-muted">Added: {props.data.addedTimestamp}</small>
+                <button className="btn btn-sm btn-danger" onClick={() => props.handleDelete(props.data._id)}>Delete</button>
+            </div>
         </div>
     );
 };
