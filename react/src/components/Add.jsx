@@ -1,5 +1,6 @@
 const Add = () => {
     function add() {
+        //console.log(data);
         const userId = document.getElementById("userId").value;
         const size = document.getElementById("size").value;
         const color = document.getElementById("color").value;
