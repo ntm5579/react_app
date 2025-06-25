@@ -1,12 +1,17 @@
 import React from 'react';
+import Promotion from "./Promotion";
+
 
 const Featured = (props) => {
     return (
-        <div className="card">
-            <div className="card bg-light">
-                <div className="card-text">{props.data.feature}</div>
-                <div className="card-text"><a href="#">Click to buy!</a></div>
-            </div>
+        <div className="container-fluid">
+            Both socks and space rockets 🚀 will take you to new heights, but only one will get cold feet!
+            <h5>Featured</h5>
+            <div className="card-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>{
+                props.data.map((promo) => (
+                    <Promotion key={promo.id} data={promo} />
+                ))
+            }</div>
         </div>
     );
 };
