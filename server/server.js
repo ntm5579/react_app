@@ -25,6 +25,34 @@ app.get('/socks', async (req, res) => {
     }
 });
 
+app.get('/socks/:color', async (req, res) => {
+    try {
+        // Console log the entire request object
+        //console.log(req);
+        const { color } = req.params;//.toLowerCase();
+
+        // Console log specific parts of the request
+        //console.log("Headers:", req.headers);
+        //console.log("URL:", req.url);
+        //console.log("Method:", req.method);
+        //console.log("Query parameters:", req.query);
+
+        const data = await fs.readFile('../data/socks.json', 'utf8');
+        const jsonObj = JSON.parse(data);
+        //sort data to find only reds
+        let colorSocks = [];
+        for (const sock in jsonObj) {
+            if (jsonObj[sock].color.toLowerCase() === color) {
+                colorSocks.push(jsonObj[sock]);
+            }
+        }
+        res.json(colorSocks);
+    } catch (err) {
+        console.error("Error:", err);
+        res.status(500).send("Hmmm, something smells... No socks for you! ☹");
+    }
+});
+
 // Middleware to parse JSON bodies
 app.use(express.json());
 
@@ -50,6 +78,34 @@ app.post('/socks', async (req, res) => {
         res.status(500).send("Hmmm, something smells... No socks for you! ☹");
     }
 });
+
+app.delete('/socks/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log('Deleting sock with ID:', id);
+        res.status(200).send('Sock deleted successfully');
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).send('Hmm, something doesn\'t smell right... Error deleting sock');
+    }
+});
+
+app.put('/user/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { email } = req.body;
+        console.log('Updating email for user with ID:', id);
+        res.status(200).send({
+            status: 'success',
+            data: email, // This URL should point to the newly created user
+            message: 'User updated successfully.'
+        });
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).send('Hmm, something doesn\'t smell right... Error deleting sock');
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
