@@ -1,50 +1,71 @@
-const Add = () => {
-    function add() {
-        //console.log(data);
-        const userId = document.getElementById("userId").value;
-        const size = document.getElementById("size").value;
-        const color = document.getElementById("color").value;
-        const pattern = document.getElementById("pattern").value;
-        const material = document.getElementById("material").value;
-        const condition = document.getElementById("condition").value;
-        const forFoot = document.getElementById("forFoot").value;
-        const waterResistant = document.getElementById("waterResistant").checked;
-        const padded = document.getElementById("padded").checked;
-        const antiBacterial = document.getElementById("antiBacterial").checked;
+import React, { useState } from 'react';
 
-        const date = new Date();
-        // POST request
-        fetch('http://localhost:9000/api/socks', {
-            method: 'POST',
+const Add = () => {
+    const [formData, setFormData] = useState({
+        userId: "",
+        sockDetails: {
+            size: "Small",
+            color: "",
+            pattern: "",
+            material: "",
+            condition: "Used",
+            forFoot: "Left",
+        },
+        additionalFeatures: {
+            waterResistant: false,
+            padded: false,
+            antiBacterial: false,
+        },
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const dataToSend = {
+            ...formData,
+            addedTimestamp: new Date().toISOString(),
+        };
+        fetch(`${import.meta.env.VITE_SOCKS_API_URL}`, {
+            method: "POST",
+            body: JSON.stringify(dataToSend),
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify(
-                {
-                    userId: userId,
-                    sockDetails: {
-                        size: size,
-                        color: color,
-                        pattern: pattern,
-                        material: material,
-                        condition: condition,
-                        forFoot: forFoot
-                    },
-                    additionalFeatures: {
-                        waterResistant: waterResistant,
-                        padded: padded,
-                        antiBacterial: antiBacterial
-                    },
-                    addedTimestamp: date.toISOString()
-                }
-            ),
         })
-            .then(response => response.json())
-            .then(data => console.log('POST:', data))
-            .catch((error) => console.error('Error:', error));
+            .then((response) => response.json())
+            .then((data) => {
+                // Handle the response data
+                console.log(data);
+            })
+            .catch((error) => {
+                // Handle any errors
+                console.error(error);
+            });
     }
+
+    function handleChanges(e) {
+        const { name, value, type, checked } = e.target;
+        if (name in formData.sockDetails) {
+            setFormData({
+                ...formData,
+                sockDetails: { ...formData.sockDetails, [name]: value }
+            });
+        }
+        else if (name in formData.additionalFeatures) {
+            setFormData({
+                ...formData,
+                additionalFeatures: { ...formData.additionalFeatures, [name]: checked }
+            });
+        }
+        else {
+            setFormData({
+                ...formData,
+                [name]: value
+            });
+        }
+    }
+
     return (
-        <form className="p-3" action={add}>
+        <form className="p-3" onSubmit={handleSubmit}>
             <div className="form-group">
                 <label htmlFor="userId">User ID</label>
                 <input
@@ -52,6 +73,8 @@ const Add = () => {
                     className="form-control"
                     id="userId"
                     name="userId"
+                    value={formData.userId} //what to put in brackets
+                    onChange={handleChanges}
                 />
             </div>
             <div className="form-group">
@@ -60,6 +83,8 @@ const Add = () => {
                     className="form-control"
                     id="size"
                     name="size"
+                    value={formData.sockDetails.size}
+                    onChange={handleChanges}
                 >
                     <option>Small</option>
                     <option>Medium</option>
@@ -73,6 +98,8 @@ const Add = () => {
                     className="form-control"
                     id="color"
                     name="color"
+                    value={formData.sockDetails.color}
+                    onChange={handleChanges}
                 />
             </div>
             <div className="form-group">
@@ -82,6 +109,8 @@ const Add = () => {
                     className="form-control"
                     id="pattern"
                     name="pattern"
+                    value={formData.sockDetails.pattern}
+                    onChange={handleChanges}
                 />
             </div>
             <div className="form-group">
@@ -91,6 +120,8 @@ const Add = () => {
                     className="form-control"
                     id="material"
                     name="material"
+                    value={formData.sockDetails.material}
+                    onChange={handleChanges}
                 />
             </div>
             <div className="form-group">
@@ -99,6 +130,8 @@ const Add = () => {
                     className="form-control"
                     id="condition"
                     name="condition"
+                    value={formData.sockDetails.condition}
+                    onChange={handleChanges}
                 >
                     <option>Used</option>
                     <option>New</option>
@@ -110,6 +143,8 @@ const Add = () => {
                     className="form-control"
                     id="forFoot"
                     name="forFoot"
+                    value={formData.sockDetails.forFoot}
+                    onChange={handleChanges}
                 >
                     <option>Left</option>
                     <option>Right</option>
@@ -123,6 +158,8 @@ const Add = () => {
                         type="checkbox"
                         id="waterResistant"
                         name="waterResistant"
+                        value={formData.additionalFeatures.waterResistant}
+                        onChange={handleChanges}
                     />
                     <label className="form-check-label" htmlFor="waterResistant">
                         Water Resistant
@@ -134,6 +171,8 @@ const Add = () => {
                         type="checkbox"
                         id="padded"
                         name="padded"
+                        value={formData.additionalFeatures.padded}
+                        onChange={handleChanges}
                     />
                     <label className="form-check-label" htmlFor="padded">
                         Padded
@@ -145,6 +184,8 @@ const Add = () => {
                         type="checkbox"
                         id="antiBacterial"
                         name="antiBacterial"
+                        value={formData.additionalFeatures.antiBacterial}
+                        onChange={handleChanges}
                     />
                     <label className="form-check-label" htmlFor="antiBacterial">
                         Anti Bacterial
