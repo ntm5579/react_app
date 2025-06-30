@@ -7,7 +7,10 @@ import Search from "./components/Search";
 import Featured from "./components/Featured";
 import Home from "./components/Home";
 import About from "./components/About";
-import Add from "./components/Add";
+import AddSock from "./components/AddSock";
+//import RequireAuth from "./components/RequireAuth";
+//import { AuthProvider } from "./hooks/AuthContext";
+import LoginForm from "./components/LoginForm";
 
 
 
@@ -17,6 +20,8 @@ import {
   Routes,
   Link
 } from "react-router-dom";
+import RequireAuth from "./components/RequireAuth";
+import { AuthProvider } from "./hooks/AuthContext";
 
 
 
@@ -101,15 +106,22 @@ function App() {
           </div>
         </nav>
         <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-          <Featured data={promo_data}/>
+          <Featured data={promo_data} />
 
           <br></br>
+          <AuthProvider>
+            <Routes>
+              <Route exact path="/" element={<Home data={data} handleDelete={handleDelete} />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/add" element={
+                <RequireAuth>
+                  <AddSock />
+                </RequireAuth>
 
-          <Routes>
-            <Route exact path="/" element={<Home data={data} handleDelete={handleDelete} />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/add" element={<Add />} />
-          </Routes>
+              } />
+              <Route path="/Login" element={<LoginForm />} />
+            </Routes>
+          </AuthProvider>
 
           <Footer environment={"DEVELOPMENT"} />
 
